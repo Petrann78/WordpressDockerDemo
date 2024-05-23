@@ -1,0 +1,89 @@
+# version: '3'
+# services:
+#   website1:
+#     image: nginx
+#     ports:
+#       - "8081:80"
+#   website2:
+#     image: nginx
+#     ports:
+#       - "8082:80"
+#     networks:
+#       websites:
+#         ipv4_address: 192.168.92.21
+# networks:
+#   websites:
+#     ipam:
+#       driver: default
+#       config:
+#        - subnet: "192.168.92.0/24"
+
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql_container
+    volumes:
+      - db_data:/var/lib/mysql
+    # Αυτόματη διαδικασία εκτέλεσης των υπηρεσιών
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example_root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: example_user
+      MYSQL_PASSWORD: example_password
+    # δίκτυο
+    networks:
+      - wordpress-network
+    # Resource config για Out Of Memory Exceptions (OOME)
+    mem_limit: 512m
+    mem_reservation: 256m
+    oom_score_adj: -1000
+    mem_swappiness: 60
+    # restart: always
+    # mem_overcommit: true
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    container_name: wordpress_container
+    ports:
+      - "8000:80"
+    # Αυτόματη διαδικασία εκτέλεσης των υπηρεσιών
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: example_user
+      WORDPRESS_DB_PASSWORD: example_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    # δίκτυο
+    networks:
+      - wordpress-network
+    # Resource config για Out Of Memory Exceptions (OOME)
+    mem_limit: 512m
+    mem_reservation: 256m
+    oom_score_adj: -1000
+    mem_swappiness: 60
+    # restart: always
+    # mem_overcommit: true
+
+# δίκτυο
+networks:
+  wordpress-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.56.1/20
+          gateway: 192.168.56.2
+    labels:
+      com.example.description: "network for wordpress and mysql"
+
+# Χώρος αποθήκευσης
+volumes:
+  db_data:
+  wordpress_data:
