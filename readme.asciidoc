@@ -8,12 +8,18 @@ database in order to save user changes. These apps
 are running inside #*Docker containers*# of course.
 
 === Installation
-Easy! just run the install.sh script like below: +
+Easy!
+
+. Clone the GitHub to your pc localy.
+
+. Run the install.sh script like below: +
+
 
 ``./install.sh`` +
 
 Running this script will build the
-[.underline]#Docker image# via the *Dockerfile*
-and run docker compose (via *docker-compose.yml* file) to start the containerized
+[.underline]#Docker image# via the ``Dockerfile``
+and run docker compose (via ``docker-compose.yml`` file) to start the containerized
 application.
 
+That's it!
