@@ -1,7 +1,8 @@
-echo -e "Initializing Wordpress Service..."
+echo -e "Initializing Wordpress Service...\n"
+echo -e "Building the docker image please wait...\n"
 docker build -t wordpress-updated:1.0 .
-echo -e "Running Docker compose pull\n"
-docker compose -f wordpress-compose.yaml pull
-echo -e "Running Docker compose up\n"
-docker compose -f wordpress-compose.yaml up -d
-echo -e "Services running!!!\n"
+echo -e "\nRunning Docker compose pull\n"
+docker compose -f docker-compose.yml pull
+echo -e "\nRunning Docker compose up\n"
+docker compose -f docker-compose.yml up -d
+echo -e "\nServices running!!!\n"
