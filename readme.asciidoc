@@ -76,7 +76,7 @@ The project has a containerized application that has
 {check} a container per servive +
 {check} resource config for Out Of Memory Exceptions (OOME) +
 {check} it's own defined network +
-{check} it's onw memory that saves data between every docker lanch +
+{check} it's own memory that saves data between every docker lanch +
 {check} Graphical User Interface (GUI) +
 {check} automatic execution function
 
