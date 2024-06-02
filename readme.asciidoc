@@ -8,19 +8,81 @@ database in order to save user changes, the WordPress
 app is served with nginx server. These apps
 are running inside #*Docker containers*# of course.
 
+=== Tools used
+* Git 
+* Docker
+* file editors (like vsc and intellij)
+* linux CLI
+
 === Installation
-Easy!
+Easy! just run the following commands. make sure you have git and docker installed.
 
 . Clone the GitHub to your pc localy. +
-git clone https://github.com/Petrann78/WordpressDockerDemo.git
+``git clone https://github.com/Petrann78/WordpressDockerDemo.git``
 . Run the install.sh script like below: +
-
-
 ``./install.sh`` +
 
 Running this script will build the
-[.underline]#Docker image# via the ``Dockerfile``
+[.underline]#Docker image# via the configurations on ``Dockerfile``
 and run docker compose (via ``docker-compose.yml`` file) to start the containerized
 application.
 
-That's it!
+That's it! it's as simple as that!
+
+
+== Documentation
+The [.underline]#Docker image# built as a result of the ``Dockerfile`` has 2 main stages in it.
+
+. Stage 1. +
+In the first stage, we pull the latest version of wordpress, we specify the working directory and we copy all the files in said working directory to the container. Lastly, we update and upgrade the installed packages to then install ``vim``, ``wget`` and ``mariadb-client``
+
+. Stage 2. +
+In this stage, we use ``Nginx`` as the base image for the second stage. Again we specify the working directory, remove the default index page that ``Nginx`` serves and replace it with the files from the [.underline]#first stage# so that it serves wordpress now. finally, we expose port 80 for HTTP traffic and set the entry point to start Nginx in the foreground, preventing it from running as a daemon.
+
+The ``Docker-compose`` file sets up a multi-container application with two services: 1) MySQL, 2) WordPress. Apart from the [.underline]#Servises#, there are configurations for the [.underline]#Network# and the [.underline]#Volumes#. Many of the variables in the Docker compose file are in a diffrent file called ``.env``.
+
+In greater detail we have: 
+
+. Services. +
+In the Services, the file builds one Service per container. Both containers are structured the same way more or less. This means that the file sets up the following:
+* Environment Variables
++ 
+This is necessary in order to connect the database with the Wordpress application.
+* Volumes
++
+Names the volume in which data will be saved for each container.
+* Ports
++
+Exposes the desired port. In the case of Wrdpress the port number would be 80 so that we can have the GUI in the browser
+* Network
++
+Define what network architecture to follow.
+* Restart Policy
++
+Simply always restarts the container on failure.
+* Resource Management
++
+Some resource restrictions and limitations for ``Out Of Memory Exeptions (OOME)``
+
+. Network. +
+Here, we specify the network architecture. In our case it is a default IPAM driver
+. Volumes. +
+In volumes, we list the names of the volumes needed to persist data.
+
+== Conclusion
+The project has a containerized application that has 
+
+:check: ☑
+{check} a container per servive +
+{check} resource config for Out Of Memory Exceptions (OOME) +
+{check} it's own defined network +
+{check} it's own memory that saves data between every docker lanch +
+{check} Graphical User Interface (GUI) +
+{check} automatic execution function
+
+
+----
+Contributors :
+    Petros Boufidis
+    Stauros - Konstantinos Giannakeas
+----
